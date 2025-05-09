@@ -4,7 +4,11 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, [darkMode]);
 
   return (
@@ -12,7 +16,7 @@ export default function App() {
       <div className="flex justify-end">
         <button
           className="border px-4 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-800"
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={() => setDarkMode((prev) => !prev)}
         >
           {darkMode ? "Light Mode" : "Dark Mode"}
         </button>
