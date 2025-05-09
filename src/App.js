@@ -16,6 +16,27 @@ export default function App() {
 
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
+    const toast = document.createElement('div');
+    toast.id = 'theme-toast';
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.padding = '10px 20px';
+    toast.style.background = '#333';
+    toast.style.color = '#fff';
+    toast.style.borderRadius = '5px';
+    toast.style.fontSize = '14px';
+    toast.style.zIndex = '9999';
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s ease-in-out';
+    toast.innerText = darkMode ? 'Dark Mode Enabled' : 'Light Mode Enabled';
+    document.body.appendChild(toast);
+    setTimeout(() => (toast.style.opacity = '1'), 100);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => document.body.removeChild(toast), 300);
+    }, 2000);
 
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -202,7 +223,7 @@ export default function App() {
         <div className="grid sm:grid-cols-2 md:grid-cols-2 gap-6" data-aos="fade-up">
           {projects.map((project, index) => (
             <div key={index} className="bg-white text-black dark:bg-gray-800 dark:text-white rounded-lg shadow-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:-translate-y-1 hover:ring-2 hover:ring-teal-400" data-aos="fade-up" data-aos-delay={index * 100}>
-              <img src={project.image} alt={project.title} className="w-full h-40 object-cover mb-4 hover:opacity-80 transition-opacity duration-300" />
+              <img src={project.image} alt={project.title} onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/400x200?text=Project+Image'; }} className="w-full h-40 object-cover mb-4 hover:opacity-80 transition-opacity duration-300" />
               <h3 className="text-xl font-bold mb-2">{project.title}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{project.description}</p>
               <div className="flex flex-wrap gap-2 text-xs mb-3">
