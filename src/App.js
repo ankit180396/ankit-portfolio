@@ -1,5 +1,5 @@
-// FINAL DRAFT WITH ICON GRID SKILLS (FIXED ICON IMPORTS)
 import React, { useState, useEffect } from "react";
+import { createRoot } from 'react-dom/client';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FaGithub, FaLinkedin, FaGlobe, FaExternalLinkAlt, FaPython, FaReact, FaAws, FaJsSquare, FaChartBar } from "react-icons/fa";
@@ -9,7 +9,9 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('darkMode');
-      return saved ? JSON.parse(saved) : false;
+      if (saved !== null) return JSON.parse(saved);
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return prefersDark;
     }
     return false;
   });
@@ -29,10 +31,16 @@ export default function App() {
     toast.style.fontSize = '14px';
     toast.style.zIndex = '9999';
     toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(20px)';
     toast.style.transition = 'opacity 0.3s ease-in-out';
-    toast.innerText = darkMode ? 'Dark Mode Enabled' : 'Light Mode Enabled';
+    toast.innerHTML = darkMode 
+      ? '<span style="margin-right: 8px;">🌙</span> Dark Mode Enabled' 
+      : '<span style="margin-right: 8px;">☀️</span> Light Mode Enabled';
     document.body.appendChild(toast);
-    setTimeout(() => (toast.style.opacity = '1'), 100);
+    setTimeout(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    }, 100);
     setTimeout(() => {
       toast.style.opacity = '0';
       setTimeout(() => document.body.removeChild(toast), 300);
@@ -75,29 +83,29 @@ export default function App() {
       title: "ML Production Optimization",
       description: "Dupont model that saved $30M by cutting manual processes by 30%.",
       tech: ["Python", "ML", "APIs"],
-      link: "https://github.com/ankit180396",
-      image: "https://source.unsplash.com/featured/?ai"
+      link: "https://github.com/ankit180396/ml-production-optimization",
+      image: "https://tse3.mm.bing.net/th?id=OIP.XX0RxXaAMwsLjCBdCdAJzgHaEK&cb=iwp1&pid=Api"
     },
     {
       title: "SO2 Emissions Monitor",
       description: "Real-time emissions tracking using Kafka and Spark.",
       tech: ["Kafka", "Spark", "Streaming"],
-      link: "https://github.com/ankit180396",
-      image: "https://source.unsplash.com/featured/?emissions"
+      link: "https://github.com/ankit180396/so2-emissions-monitor",
+      image: "https://tse3.mm.bing.net/th?id=OIP.SXSMb2sx0ly7Nv4oJPSCfAHaE8&cb=iwc1&pid=Api"
     },
     {
       title: "Bank Term Deposit Predictor",
       description: "Classification model with 80% accuracy using call data.",
       tech: ["scikit-learn", "XGBoost"],
-      link: "https://github.com/ankit180396",
-      image: "https://source.unsplash.com/featured/?finance"
+      link: "https://github.com/ankit180396/bank-term-predictor",
+      image: "https://tse3.mm.bing.net/th/id/OIP.koWvAsh_UmILmf-OybknfQHaFj?cb=iwc1&pid=Api"
     },
     {
       title: "E-commerce ETL & Dashboard",
       description: "Data pipeline + dashboarding for product tracking.",
       tech: ["MySQL", "Tableau", "ETL"],
-      link: "https://github.com/ankit180396",
-      image: "https://source.unsplash.com/featured/?dashboard"
+      link: "https://github.com/ankit180396/ecommerce-etl-dashboard",
+      image: "https://tse1.mm.bing.net/th/id/OIP.g7o7ntlHFmlFHXMmtQzmuQHaEK?cb=iwc1&pid=Api"
     }
   ];
 
@@ -121,9 +129,9 @@ export default function App() {
         {/* HERO SECTION */}
         <section className="text-center mt-10">
           <img
-            src="https://avatars.githubusercontent.com/u/9919?s=200&v=4"
+            src="/ankit-photo.jpg"
             alt="Avatar"
-            className="w-28 h-28 mx-auto rounded-full shadow-lg border-4 border-white mb-4"
+            className="w-28 h-28 mx-auto rounded-full shadow-lg border-4 border-white mb-4 transform transition-transform duration-300 hover:scale-110 hover:shadow-xl"
           />
           <h1 className="text-5xl font-extrabold tracking-tight">Ankit Choudhary</h1>
           <p className="text-lg mt-3 font-light">Software Engineer & Data Scientist</p>
