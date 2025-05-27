@@ -3,8 +3,7 @@ import { createRoot } from 'react-dom/client';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FaGithub, FaLinkedin, FaGlobe, FaExternalLinkAlt, FaPython, FaReact, FaAws, FaJsSquare, FaChartBar } from "react-icons/fa";
-import { SiFastapi, SiMongodb, SiPostgresql, SiTableau, SiApachekafka, SiApachespark, SiScikitlearn } from "react-icons/si";
-
+import { SiTypescript, SiFastapi, SiRedux, SiMongodb, SiPostgresql, SiSnowflake, SiApachekafka, SiApachespark, SiScikitlearn, SiTensorflow, SiPytorch, SiNumpy, SiPandas, SiTableau, SiGooglecloud } from "react-icons/si";
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -56,25 +55,47 @@ export default function App() {
   const skills = {
     Languages: [
       { name: "Python", icon: <FaPython className="text-yellow-300 text-3xl mx-auto" /> },
-      { name: "JavaScript", icon: <FaJsSquare className="text-yellow-200 text-3xl mx-auto" /> }
+      { name: "JavaScript", icon: <FaJsSquare className="text-yellow-200 text-3xl mx-auto" /> },
+      { name: "TypeScript", icon: <SiTypescript className="text-blue-400 text-3xl mx-auto" /> },
+      { name: "R", icon: <FaChartBar className="text-purple-400 text-3xl mx-auto" /> },
+      { name: "SAS", icon: <FaChartBar className="text-purple-300 text-3xl mx-auto" /> }
     ],
     Frameworks: [
       { name: "ReactJS", icon: <FaReact className="text-blue-400 text-3xl mx-auto" /> },
-      { name: "FastAPI", icon: <SiFastapi className="text-teal-400 text-3xl mx-auto" /> }
+      { name: "FastAPI", icon: <SiFastapi className="text-teal-400 text-3xl mx-auto" /> },
+      { name: "Redux", icon: <SiRedux className="text-purple-300 text-3xl mx-auto" /> },
+      { name: "Django", icon: <FaPython className="text-green-300 text-3xl mx-auto" /> },
+      { name: "Flask", icon: <FaPython className="text-gray-300 text-3xl mx-auto" /> },
+      { name: "NodeJS", icon: <FaJsSquare className="text-green-300 text-3xl mx-auto" /> }
     ],
     Databases: [
       { name: "MongoDB", icon: <SiMongodb className="text-green-400 text-3xl mx-auto" /> },
-      { name: "PostgreSQL", icon: <SiPostgresql className="text-indigo-300 text-3xl mx-auto" /> }
+      { name: "PostgreSQL", icon: <SiPostgresql className="text-indigo-300 text-3xl mx-auto" /> },
+      { name: "Snowflake", icon: <SiSnowflake className="text-blue-300 text-3xl mx-auto" /> },
+      { name: "MySQL", icon: <FaChartBar className="text-blue-400 text-3xl mx-auto" /> },
+      { name: "Oracle", icon: <FaChartBar className="text-orange-400 text-3xl mx-auto" /> },
+      { name: "Redshift", icon: <FaAws className="text-red-300 text-3xl mx-auto" /> },
+      { name: "MSSQL", icon: <FaChartBar className="text-blue-800 text-3xl mx-auto" /> },
+      { name: "Cassandra", icon: <FaChartBar className="text-gray-400 text-3xl mx-auto" /> }
     ],
     Tools: [
       { name: "Kafka", icon: <SiApachekafka className="text-gray-200 text-3xl mx-auto" /> },
       { name: "Spark", icon: <SiApachespark className="text-orange-400 text-3xl mx-auto" /> },
-      { name: "scikit-learn", icon: <SiScikitlearn className="text-green-300 text-3xl mx-auto" /> }
+      { name: "scikit-learn", icon: <SiScikitlearn className="text-green-300 text-3xl mx-auto" /> },
+      { name: "TensorFlow", icon: <SiTensorflow className="text-orange-400 text-3xl mx-auto" /> },
+      { name: "PyTorch", icon: <SiPytorch className="text-red-400 text-3xl mx-auto" /> },
+      { name: "NumPy", icon: <SiNumpy className="text-blue-300 text-3xl mx-auto" /> },
+      { name: "Pandas", icon: <SiPandas className="text-purple-300 text-3xl mx-auto" /> },
+      { name: "XGBoost", icon: <FaChartBar className="text-orange-300 text-3xl mx-auto" /> },
+      { name: "VSCode", icon: <FaChartBar className="text-blue-300 text-3xl mx-auto" /> },
+      { name: "Git", icon: <FaGithub className="text-gray-300 text-3xl mx-auto" /> }
     ],
     CloudAndBI: [
       { name: "AWS", icon: <FaAws className="text-orange-300 text-3xl mx-auto" /> },
       { name: "Tableau", icon: <SiTableau className="text-blue-200 text-3xl mx-auto" /> },
-      { name: "Power BI", icon: <FaChartBar className="text-yellow-300 text-3xl mx-auto" /> }
+      { name: "Power BI", icon: <FaChartBar className="text-yellow-300 text-3xl mx-auto" /> },
+      { name: "Azure", icon: <FaChartBar className="text-blue-500 text-3xl mx-auto" /> },
+      { name: "GCP", icon: <SiGooglecloud className="text-yellow-300 text-3xl mx-auto" /> }
     ]
   };
 
@@ -83,31 +104,60 @@ export default function App() {
       title: "ML Production Optimization",
       description: "Dupont model that saved $30M by cutting manual processes by 30%.",
       tech: ["Python", "ML", "APIs"],
-      link: "https://github.com/ankit180396/ml-production-optimization",
+      link: "https://github.com/ankit180396/",
       image: "https://tse3.mm.bing.net/th?id=OIP.XX0RxXaAMwsLjCBdCdAJzgHaEK&cb=iwp1&pid=Api"
     },
     {
       title: "SO2 Emissions Monitor",
       description: "Real-time emissions tracking using Kafka and Spark.",
       tech: ["Kafka", "Spark", "Streaming"],
-      link: "https://github.com/ankit180396/so2-emissions-monitor",
+      link: "https://github.com/ankit180396/",
       image: "https://tse3.mm.bing.net/th?id=OIP.SXSMb2sx0ly7Nv4oJPSCfAHaE8&cb=iwc1&pid=Api"
     },
     {
       title: "Bank Term Deposit Predictor",
       description: "Classification model with 80% accuracy using call data.",
       tech: ["scikit-learn", "XGBoost"],
-      link: "https://github.com/ankit180396/bank-term-predictor",
+      link: "https://github.com/ankit180396/",
       image: "https://tse3.mm.bing.net/th/id/OIP.koWvAsh_UmILmf-OybknfQHaFj?cb=iwc1&pid=Api"
     },
     {
       title: "E-commerce ETL & Dashboard",
       description: "Data pipeline + dashboarding for product tracking.",
       tech: ["MySQL", "Tableau", "ETL"],
-      link: "https://github.com/ankit180396/ecommerce-etl-dashboard",
+      link: "https://github.com/ankit180396/",
       image: "https://tse1.mm.bing.net/th/id/OIP.g7o7ntlHFmlFHXMmtQzmuQHaEK?cb=iwc1&pid=Api"
+    },
+    {
+      title: "NLP Product Categorizer",
+      description: "TF-IDF + SVM pipeline classifying e-comm listings with 85% accuracy.",
+      tech: ["Python", "SVM", "NLP"],
+      link: "https://github.com/ankit180396/",
+      image: "https://images.ctfassets.net/3viuren4us1n/4jw95A7JsM8bx6jPGCBSka/c4b3e5539e9b405ef4f927ef626dd9ad/product_categorization.jpg?fm=webp&w=1920"
+    },
+    {
+      title: "Supply Chain Optimizer",
+      description: "Simulation model identifying optimum solution for Suppy Chain.",
+      tech: ["Python", "Pandas", "NumPy", "Power Bi"],
+      link: "https://github.com/ankit180396/",
+      image: "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*FOF6O_3efCQRJ1BvIRJsYg.png"
+    },
+    {
+      title: "ESG Analytics Platform",
+      description: "FastAPI + GCP platform generating enterprise ESG reports.",
+      tech: ["FastAPI", "SQL", "GCP", "Airflow"],
+      link: "https://github.com/ankit180396/",
+      image: "https://images.prismic.io/greenly/d5cb8bdb-af3d-4853-904d-bac96a4d54a0_youtube2.jpg?auto=compress%2Cformat&w=894&fit=max&dpr=3"
+    },
+    {
+      title: "Sales Forecast Dashboard",
+      description: "ARIMA-powered forecast engine with interactive Power BI visualizations.",
+      tech: ["Python", "ARIMA", "Power BI"],
+      link: "https://github.com/ankit180396/",
+      image: "https://miro.medium.com/v2/resize:fit:1202/1*Vl9EIB10VGioZr7p631kvg.png"
     }
   ];
+  
 
   return (
     <div className={`${darkMode ? "dark" : ""}`}>
@@ -172,10 +222,18 @@ export default function App() {
               role: 'Business Consultant',
               dates: 'Jan 2022 – Jul 2023',
               bullets: [
-                'Optimized Python scripts reducing execution time by 60% and saving ~$1M annually.',
-                'Developed ML-based production strategies for Dupont with $30M impact.',
-                'Refactored complex APIs for P&G, cutting 250+ hours of manual work.',
-                'Led delivery of a global SaaS platform powered by AI/ML.'
+                'Promoted from Assovciate Business Consultant to Business Consultant in under 12 months.',
+                'Optimized ETL pipelines in Python and SQL, improving data processing speed by 60%.',
+                'Led ML initiatives using scikit-learn and TensorFlow that delivered $30M+ in annualized business impact.',
+                'Redesigned data workflows for global CPG client P&G, eliminating 250+ manual hours/month.',
+                'Delivered a scalable SaaS analytics platform for ESG metrics using FastAPI and GCP.',
+                'Built advanced regression models and classification pipelines for marketing and finance analytics.',
+                'Performed statistical hypothesis testing and A/B experimentation for client insights.',
+                'Worked closely with cross-functional teams on data modeling and stakeholder dashboards.',
+                'Used Docker and Kubernetes to deploy ML microservices across cloud environments.',
+                'Created Airflow DAGs for automating data ingestion from external APIs.',
+                'Collaborated with DevOps to optimize CI/CD pipelines for data science projects.',
+                'Built interactive data visualizations using Power BI and Tableau for executive reporting.'
               ]
             },
             {
@@ -183,9 +241,18 @@ export default function App() {
               role: 'Python Developer',
               dates: 'Jun 2018 – Jan 2022',
               bullets: [
-                'Built scalable tools to process 1000GB+ e-commerce data across Amazon/eBay.',
-                'Developed dashboards and ML solutions reducing reporting effort by 70%.',
-                'Increased campaign ROI by 20% through buyer behavior analytics.'
+                'Promoted from Junior Developer to Lead Developer within 2 years.',
+                'Built Python-based scraping and enrichment pipelines processing 1000GB+ e-commerce data.',
+                'Developed dashboards using Tableau and Power BI to reduce reporting efforts by 70%.',
+                'Increased marketing ROI by 20% through predictive analytics and user segmentation.',
+                'Designed relational and NoSQL data models for performance-optimized querying.',
+                'Used Pandas and NumPy for heavy data wrangling and feature engineering tasks.',
+                'Created REST APIs using Flask for data integration with frontend dashboards.',
+                'Built scalable ML pipelines for recommendation systems and churn prediction.',
+                'Deployed predictive models using CI/CD workflows and Docker containers.',
+                'Collaborated with data analysts and DevOps teams for real-time data sync.',
+                'Implemented Kafka consumers for event-driven architecture and streaming ingestion.',
+                'Developed unit-tested, modularized codebases that were later adopted across projects.'
               ]
             },
             {
@@ -193,8 +260,12 @@ export default function App() {
               role: 'Junior Engineer (R&D)',
               dates: 'Nov 2017 – May 2018',
               bullets: [
-                'Developed Raspberry Pi-based fault detection system reducing production losses.',
-                'Contributed to system stability with real-time Python + MySQL solutions.'
+                'Developed fault detection system using Raspberry Pi, reducing manual error by 30%.',
+                'Worked on microcontroller interfacing for industrial process control applications.',
+                'Built embedded Python scripts for sensor calibration and signal processing.',
+                'Collaborated on designing a web-based monitoring tool using Flask and SQLite.',
+                'Tested system stability across various fault conditions and provided QA reports.',
+                'Integrated serial communication modules for real-time status dashboards.'
               ]
             }
           ].map((job, idx) => (
