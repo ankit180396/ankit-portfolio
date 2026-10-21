@@ -111,7 +111,9 @@ export function ChatPanel() {
         </button>
       </form>
       <p className="chatDisclaimer">
-        Verified public facts only. Please do not enter confidential or personal information.
+        Answers are grounded in verified public facts and include source labels. Retrieval-only mode
+        takes over automatically if hosted AI is unavailable. Please do not enter confidential or
+        personal information.
       </p>
     </div>
   );

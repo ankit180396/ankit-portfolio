@@ -7,7 +7,7 @@ A recruiter-first engineering portfolio built with Next.js, TypeScript, and the 
 The repository is both the source for the live portfolio and a public engineering sample. It demonstrates:
 
 - clear component and content boundaries;
-- server-side AI integration with streaming responses;
+- server-side AI integration with a deterministic retrieval fallback;
 - deterministic retrieval before generation;
 - input validation, bounded context, output limits, and basic abuse controls;
 - accessible, responsive interaction design;
@@ -29,7 +29,7 @@ npm install
 npm run dev
 ```
 
-The main portfolio works without an AI credential. To enable the assistant locally, copy `.env.example` to `.env.local` and provide an AI Gateway credential or use a linked Vercel project's OIDC environment.
+The main portfolio and retrieval-only Q&A work without an AI credential. To enable generative answers locally, copy `.env.example` to `.env.local` and provide an AI Gateway credential or use a linked Vercel project's OIDC environment.
 
 ```bash
 cp .env.example .env.local
@@ -47,7 +47,7 @@ npm run build
 
 ## AI assistant design
 
-The assistant does not use a database for its small public corpus. Each question is matched against curated knowledge chunks with deterministic keyword scoring. Only the most relevant chunks are passed to the model. This keeps the system inexpensive, inspectable, and easy to update.
+The assistant does not use a database for its small public corpus. Each question is matched against curated knowledge chunks with deterministic keyword scoring. Only the most relevant chunks are passed to the model. If AI Gateway is unavailable, or if a generated response omits its required source label, the API returns an extractive answer directly from those chunks. This keeps the system inexpensive, inspectable, and functional without model access.
 
 The public assistant intentionally excludes phone numbers, compensation, immigration details, home addresses, and confidential client data. It is instructed to say when the evidence is missing rather than improvise.
 

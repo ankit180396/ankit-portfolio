@@ -11,8 +11,9 @@ flowchart TD
   A --> D[Ask Ankit AI]
   D --> E[Validated server request]
   E --> F[Deterministic knowledge retrieval]
-  F --> G[AI Gateway model]
-  G --> H[Streaming answer with source labels]
+  F --> G{AI Gateway available?}
+  G -->|Yes| H[Grounded AI answer with source labels]
+  G -->|No| I[Extractive answer from verified chunks]
 ```
 
 ## AI request path
@@ -22,7 +23,9 @@ flowchart TD
 3. An approximate in-memory limiter reduces casual abuse. For sustained public traffic, replace it with a durable rate limiter such as Upstash Redis or a platform-level rule.
 4. The latest recruiter question is tokenized and scored against the curated chunks in `lib/profile.ts`.
 5. The top evidence is placed into a constrained system prompt.
-6. Vercel AI Gateway handles the model request and streams the result back through the AI SDK UI protocol.
+6. Vercel AI Gateway synthesizes a concise answer when authentication, credits, and the selected model are available.
+7. Every generated answer must contain one of the retrieved source labels. If generation fails or violates that contract, the route returns an extractive answer built directly from the verified chunks.
+8. Unsupported questions are refused rather than filled with unrelated profile facts.
 
 ## Why there is no vector database
 
@@ -32,10 +35,12 @@ The current knowledge base is small and changes infrequently. Keyword retrieval 
 
 - The assistant answers only from curated public facts.
 - Source labels are part of the response contract.
+- A deterministic retrieval-only response keeps the chat useful when the hosted model is unavailable.
+- Retrieval-only answers copy the curated evidence rather than generating new claims.
 - Output is capped to keep answers concise and costs bounded.
 - The browser never receives an AI credential.
 - The assistant excludes sensitive personal and confidential client information.
-- The portfolio remains fully useful if the AI route is unavailable.
+- The portfolio and Q&A experience remain useful if AI Gateway is unavailable.
 
 ## Production hardening path
 

@@ -1,12 +1,16 @@
 import {
   convertToModelMessages,
+  createUIMessageStream,
   createUIMessageStreamResponse,
-  streamText,
-  toUIMessageStream,
+  generateText,
   type UIMessage,
 } from "ai";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { formatKnowledge, retrieveKnowledge } from "@/lib/retrieval";
+import {
+  buildGroundedAnswer,
+  formatKnowledge,
+  retrieveKnowledge,
+} from "@/lib/retrieval";
 
 export const maxDuration = 30;
 
@@ -19,6 +23,25 @@ function getText(message: UIMessage): string {
     .map((part) => part.text)
     .join(" ")
     .trim();
+}
+
+function createGroundedResponse(text: string, mode: "ai" | "retrieval") {
+  const stream = createUIMessageStream({
+    execute: ({ writer }) => {
+      const textId = `answer-${mode}`;
+
+      writer.write({ type: "start", messageMetadata: { mode } });
+      writer.write({ type: "text-start", id: textId });
+      writer.write({ type: "text-delta", id: textId, delta: text });
+      writer.write({ type: "text-end", id: textId });
+      writer.write({ type: "finish", finishReason: "stop", messageMetadata: { mode } });
+    },
+  });
+
+  return createUIMessageStreamResponse({
+    stream,
+    headers: { "X-Portfolio-Answer-Mode": mode },
+  });
 }
 
 export async function POST(request: Request) {
@@ -65,12 +88,20 @@ export async function POST(request: Request) {
     return Response.json({ error: "Please ask a shorter question." }, { status: 400 });
   }
 
-  const context = formatKnowledge(retrieveKnowledge(question));
+  const matches = retrieveKnowledge(question);
+  const fallbackAnswer = buildGroundedAnswer(matches);
+
+  if (matches.length === 0) {
+    return createGroundedResponse(fallbackAnswer, "retrieval");
+  }
+
+  const context = formatKnowledge(matches);
   const model = process.env.AI_GATEWAY_MODEL || "nvidia/nemotron-3.5-lightning-free";
 
-  const result = streamText({
-    model,
-    system: `You are the public portfolio assistant for Ankit Choudhary. Help recruiters understand his verified professional background.
+  try {
+    const result = await generateText({
+      model,
+      system: `You are the public portfolio assistant for Ankit Choudhary. Help recruiters understand his verified professional background.
 
 Rules:
 - Use only the supplied verified context. Never invent employers, dates, credentials, tools, metrics, or personal details.
@@ -82,12 +113,23 @@ Rules:
 
 Verified context:
 ${context}`,
-    messages: await convertToModelMessages(typedMessages.slice(-6)),
-    maxOutputTokens: 320,
-    temperature: 0.2,
-  });
+      messages: await convertToModelMessages(typedMessages.slice(-6)),
+      maxOutputTokens: 320,
+      temperature: 0,
+    });
 
-  return createUIMessageStreamResponse({
-    stream: toUIMessageStream({ stream: result.stream }),
-  });
+    const hasSourceLabel = matches.some((chunk) => result.text.includes(`[${chunk.source}]`));
+
+    if (!result.text.trim() || !hasSourceLabel) {
+      return createGroundedResponse(fallbackAnswer, "retrieval");
+    }
+
+    return createGroundedResponse(result.text, "ai");
+  } catch (error) {
+    console.warn("AI Gateway generation unavailable; using verified retrieval response.", {
+      errorType: error instanceof Error ? error.name : "unknown",
+    });
+
+    return createGroundedResponse(fallbackAnswer, "retrieval");
+  }
 }

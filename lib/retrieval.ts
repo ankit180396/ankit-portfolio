@@ -4,9 +4,11 @@ const stopWords = new Set([
   "a",
   "an",
   "and",
+  "ankit",
   "are",
   "as",
   "at",
+  "about",
   "be",
   "for",
   "from",
@@ -16,9 +18,11 @@ const stopWords = new Set([
   "how",
   "in",
   "is",
+  "me",
   "of",
   "on",
   "the",
+  "tell",
   "to",
   "what",
   "which",
@@ -59,11 +63,27 @@ export function retrieveKnowledge(query: string, limit = 4): KnowledgeChunk[] {
     return matches.map((item) => item.chunk);
   }
 
-  return knowledgeBase.slice(0, Math.min(limit, 2));
+  return [];
 }
 
 export function formatKnowledge(chunks: KnowledgeChunk[]): string {
   return chunks
     .map((chunk) => `[${chunk.source}]\n${chunk.text}`)
     .join("\n\n");
+}
+
+export function buildGroundedAnswer(chunks: KnowledgeChunk[]): string {
+  if (chunks.length === 0) {
+    return [
+      "That detail is not included in Ankit's public portfolio knowledge base.",
+      "Please contact Ankit directly if it is important for evaluating role fit.",
+    ].join(" ");
+  }
+
+  const evidence = chunks
+    .slice(0, 2)
+    .map((chunk) => `${chunk.text} [${chunk.source}]`)
+    .join("\n\n");
+
+  return `Verified knowledge-base answer:\n\n${evidence}`;
 }
