@@ -1,4 +1,5 @@
 :root {
+  color-scheme: dark;
   --ink: #eef6fb;
   --muted: #96a8b7;
   --muted-strong: #bdcad4;
@@ -9,13 +10,61 @@
   --line-strong: rgba(191, 216, 231, 0.25);
   --accent: #67e8d1;
   --accent-strong: #25c8ae;
-  --accent-soft: rgba(103, 232, 209, 0.12);
+  --accent-rgb: 103, 232, 209;
+  --accent-soft: rgba(var(--accent-rgb), 0.12);
   --warm: #ffcb86;
   --background: #07111b;
+  --on-accent: #03251f;
+  --on-accent-muted: rgba(3, 37, 31, 0.67);
+  --body-glow: rgba(26, 100, 111, 0.16);
+  --header-background: rgba(7, 17, 27, 0.78);
+  --hover-fill: rgba(255, 255, 255, 0.05);
+  --subtle-fill: rgba(255, 255, 255, 0.025);
+  --card-sheen: rgba(255, 255, 255, 0.025);
+  --portrait-background: linear-gradient(155deg, #173247, #09141f 70%);
+  --portrait-inset: rgba(238, 246, 251, 0.17);
+  --input-background: #07111b;
+  --placeholder: #657988;
+  --contact-background:
+    radial-gradient(circle at 95% 5%, rgba(var(--accent-rgb), 0.14), transparent 24rem),
+    linear-gradient(135deg, #102637, #0b1722 68%);
   --max-width: 1180px;
   --radius-lg: 28px;
   --radius-md: 18px;
   --shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --ink: #102235;
+  --muted: #627486;
+  --muted-strong: #40586c;
+  --surface: #ffffff;
+  --surface-raised: #f2f8fa;
+  --surface-soft: #eaf2f5;
+  --line: rgba(24, 59, 82, 0.13);
+  --line-strong: rgba(24, 59, 82, 0.23);
+  --accent: #0f766e;
+  --accent-strong: #0d9488;
+  --accent-rgb: 15, 118, 110;
+  --accent-soft: rgba(15, 118, 110, 0.09);
+  --warm: #92520e;
+  --background: #f5f8fa;
+  --on-accent: #ffffff;
+  --on-accent-muted: rgba(255, 255, 255, 0.76);
+  --body-glow: rgba(15, 118, 110, 0.11);
+  --header-background: rgba(249, 252, 253, 0.86);
+  --hover-fill: rgba(15, 118, 110, 0.07);
+  --subtle-fill: rgba(15, 34, 53, 0.025);
+  --card-sheen: rgba(15, 34, 53, 0.018);
+  --portrait-background: linear-gradient(155deg, #dbe9ef, #edf4f7 70%);
+  --portrait-inset: rgba(255, 255, 255, 0.64);
+  --input-background: #ffffff;
+  --placeholder: #708394;
+  --contact-background:
+    radial-gradient(circle at 95% 5%, rgba(15, 118, 110, 0.13), transparent 24rem),
+    linear-gradient(135deg, #e7f2f4, #f8fbfc 68%);
+  --shadow: 0 28px 70px rgba(34, 66, 84, 0.14);
 }
 
 * {
@@ -29,12 +78,13 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at 14% 0%, rgba(26, 100, 111, 0.16), transparent 27rem),
+    radial-gradient(circle at 14% 0%, var(--body-glow), transparent 27rem),
     var(--background);
   color: var(--ink);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.6;
   text-rendering: optimizeLegibility;
+  transition: color 180ms ease, background-color 180ms ease;
 }
 
 a {
@@ -61,7 +111,7 @@ textarea:focus-visible {
 
 ::selection {
   background: var(--accent);
-  color: #03251f;
+  color: var(--on-accent);
 }
 
 .srOnly {
@@ -90,7 +140,7 @@ textarea:focus-visible {
   gap: 20px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: rgba(7, 17, 27, 0.78);
+  background: var(--header-background);
   backdrop-filter: blur(18px);
   box-shadow: 0 16px 42px rgba(0, 0, 0, 0.18);
 }
@@ -111,7 +161,7 @@ textarea:focus-visible {
   place-items: center;
   border-radius: 12px;
   background: var(--accent);
-  color: #03251f;
+  color: var(--on-accent);
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -133,20 +183,47 @@ textarea:focus-visible {
 
 .siteHeader nav a:hover {
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--hover-fill);
 }
 
 .siteHeader nav .navContact {
   margin-left: 6px;
   padding-inline: 16px;
-  color: #03251f;
+  color: var(--on-accent);
   background: var(--accent);
   font-weight: 750;
 }
 
 .siteHeader nav .navContact:hover {
-  color: #03251f;
-  background: #8af1df;
+  color: var(--on-accent);
+  background: var(--accent-strong);
+}
+
+.themeToggle {
+  min-height: 38px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--subtle-fill);
+  color: var(--muted-strong);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 750;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.themeToggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.themeToggle:hover {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .hero {
@@ -170,7 +247,7 @@ textarea:focus-visible {
   height: 420px;
   right: -160px;
   top: 90px;
-  background: radial-gradient(circle, rgba(103, 232, 209, 0.15), transparent 66%);
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.15), transparent 66%);
 }
 
 .heroGlowTwo {
@@ -260,13 +337,13 @@ textarea:focus-visible {
 
 .primaryButton {
   background: var(--accent);
-  color: #03251f;
+  color: var(--on-accent);
   box-shadow: 0 14px 34px rgba(37, 200, 174, 0.16);
 }
 
 .secondaryButton {
   border-color: var(--line-strong);
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--subtle-fill);
   color: var(--ink);
 }
 
@@ -276,7 +353,7 @@ textarea:focus-visible {
 }
 
 .secondaryButton:hover {
-  border-color: rgba(103, 232, 209, 0.48);
+  border-color: rgba(var(--accent-rgb), 0.48);
   background: var(--accent-soft);
 }
 
@@ -296,7 +373,7 @@ textarea:focus-visible {
   flex: 0 0 auto;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 6px rgba(103, 232, 209, 0.08);
+  box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.08);
 }
 
 .heroVisual {
@@ -321,7 +398,7 @@ textarea:focus-visible {
   z-index: -1;
   border-radius: 48% 52% 45% 55%;
   background:
-    radial-gradient(circle at 26% 18%, rgba(103, 232, 209, 0.2), transparent 38%),
+    radial-gradient(circle at 26% 18%, rgba(var(--accent-rgb), 0.2), transparent 38%),
     radial-gradient(circle at 78% 78%, rgba(255, 203, 134, 0.11), transparent 42%);
   filter: blur(22px);
   opacity: 0.78;
@@ -333,7 +410,7 @@ textarea:focus-visible {
   aspect-ratio: 0.812;
   border: 1px solid var(--line-strong);
   border-radius: 34px;
-  background: linear-gradient(155deg, #173247, #09141f 70%);
+  background: var(--portrait-background);
   box-shadow: var(--shadow);
   overflow: hidden;
   isolation: isolate;
@@ -345,7 +422,7 @@ textarea:focus-visible {
   position: absolute;
   inset: 10px;
   z-index: 3;
-  border: 1px solid rgba(238, 246, 251, 0.17);
+  border: 1px solid var(--portrait-inset);
   border-radius: 25px;
   pointer-events: none;
 }
@@ -369,7 +446,7 @@ textarea:focus-visible {
   border: 1px solid var(--line);
   border-radius: 18px;
   background:
-    linear-gradient(135deg, rgba(103, 232, 209, 0.055), transparent 56%),
+    linear-gradient(135deg, rgba(var(--accent-rgb), 0.055), transparent 56%),
     var(--surface);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
 }
@@ -397,7 +474,7 @@ textarea:focus-visible {
   height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 5px rgba(103, 232, 209, 0.08);
+  box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.08);
 }
 
 .portraitIdentity strong {
@@ -433,8 +510,8 @@ textarea:focus-visible {
 @media (hover: hover) {
   .portraitCard:hover .portraitFrame {
     transform: translateY(-5px);
-    border-color: rgba(103, 232, 209, 0.48);
-    box-shadow: 0 34px 96px rgba(0, 0, 0, 0.38), 0 0 56px rgba(103, 232, 209, 0.1);
+    border-color: rgba(var(--accent-rgb), 0.48);
+    box-shadow: 0 34px 96px rgba(0, 0, 0, 0.38), 0 0 56px rgba(var(--accent-rgb), 0.1);
   }
 
   .portraitCard:hover .portraitFrame img {
@@ -538,14 +615,14 @@ textarea:focus-visible {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 52%),
+    linear-gradient(145deg, var(--card-sheen), transparent 52%),
     var(--surface);
   transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
 }
 
 .focusCard:hover {
   transform: translateY(-5px);
-  border-color: rgba(103, 232, 209, 0.34);
+  border-color: rgba(var(--accent-rgb), 0.34);
   background: var(--surface-raised);
 }
 
@@ -555,7 +632,7 @@ textarea:focus-visible {
   margin-bottom: auto;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(103, 232, 209, 0.27);
+  border: 1px solid rgba(var(--accent-rgb), 0.27);
   border-radius: 14px;
   background: var(--accent-soft);
   color: var(--accent);
@@ -600,7 +677,7 @@ textarea:focus-visible {
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--muted-strong);
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--subtle-fill);
   font-size: 0.69rem;
   white-space: nowrap;
 }
@@ -633,12 +710,12 @@ textarea:focus-visible {
 }
 
 .filterButtonActive {
-  color: #03251f;
+  color: var(--on-accent);
   background: var(--accent);
 }
 
 .filterButtonActive:hover {
-  color: #03251f;
+  color: var(--on-accent);
 }
 
 .projectGrid {
@@ -661,13 +738,13 @@ textarea:focus-visible {
 
 .projectCard:hover {
   transform: translateY(-4px);
-  border-color: rgba(103, 232, 209, 0.32);
+  border-color: rgba(var(--accent-rgb), 0.32);
   box-shadow: var(--shadow);
 }
 
 .projectCardFeatured {
   background:
-    radial-gradient(circle at 90% 0%, rgba(103, 232, 209, 0.1), transparent 18rem),
+    radial-gradient(circle at 90% 0%, rgba(var(--accent-rgb), 0.1), transparent 18rem),
     var(--surface-raised);
 }
 
@@ -697,7 +774,7 @@ textarea:focus-visible {
   margin: 0 0 24px;
   padding: 15px 17px;
   border-left: 2px solid var(--accent);
-  background: rgba(103, 232, 209, 0.055);
+  background: rgba(var(--accent-rgb), 0.055);
 }
 
 .projectOutcome > span {
@@ -817,7 +894,7 @@ textarea:focus-visible {
   padding: 28px;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.01);
+  background: var(--card-sheen);
 }
 
 .skillGroup > span {
@@ -845,7 +922,7 @@ textarea:focus-visible {
 .skillGroup li::before {
   content: "↳";
   margin-right: 8px;
-  color: rgba(103, 232, 209, 0.52);
+  color: rgba(var(--accent-rgb), 0.52);
 }
 
 .educationBand {
@@ -919,10 +996,10 @@ textarea:focus-visible {
 
 .chatShell {
   overflow: hidden;
-  border: 1px solid rgba(103, 232, 209, 0.3);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
   border-radius: 24px;
   background:
-    linear-gradient(160deg, rgba(103, 232, 209, 0.06), transparent 38%),
+    linear-gradient(160deg, rgba(var(--accent-rgb), 0.06), transparent 38%),
     var(--surface);
   box-shadow: var(--shadow);
 }
@@ -935,7 +1012,7 @@ textarea:focus-visible {
   justify-content: space-between;
   gap: 16px;
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.018);
+  background: var(--subtle-fill);
 }
 
 .chatIdentity {
@@ -951,7 +1028,7 @@ textarea:focus-visible {
   place-items: center;
   border-radius: 12px;
   background: var(--accent);
-  color: #03251f;
+  color: var(--on-accent);
 }
 
 .chatIdentity div {
@@ -984,7 +1061,7 @@ textarea:focus-visible {
   height: 6px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(103, 232, 209, 0.08);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.08);
 }
 
 .chatMessages {
@@ -995,7 +1072,7 @@ textarea:focus-visible {
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
-  scrollbar-color: rgba(103, 232, 209, 0.3) transparent;
+  scrollbar-color: rgba(var(--accent-rgb), 0.3) transparent;
 }
 
 .assistantMessage,
@@ -1016,7 +1093,7 @@ textarea:focus-visible {
   align-self: flex-end;
   border-bottom-right-radius: 4px;
   background: var(--accent);
-  color: #03251f;
+  color: var(--on-accent);
 }
 
 .messageRole {
@@ -1030,7 +1107,7 @@ textarea:focus-visible {
 }
 
 .userMessage .messageRole {
-  color: rgba(3, 37, 31, 0.67);
+  color: var(--on-accent-muted);
 }
 
 .assistantMessage p,
@@ -1077,6 +1154,12 @@ textarea:focus-visible {
   font-size: 0.74rem;
 }
 
+[data-theme="light"] .chatError {
+  border-color: rgba(176, 42, 42, 0.22);
+  background: rgba(176, 42, 42, 0.07);
+  color: #9c2424;
+}
+
 .suggestionGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1088,7 +1171,7 @@ textarea:focus-visible {
   padding: 10px 11px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.015);
+  background: var(--subtle-fill);
   color: var(--muted-strong);
   cursor: pointer;
   text-align: left;
@@ -1098,7 +1181,7 @@ textarea:focus-visible {
 }
 
 .suggestionGrid button:hover {
-  border-color: rgba(103, 232, 209, 0.4);
+  border-color: rgba(var(--accent-rgb), 0.4);
   background: var(--accent-soft);
   color: var(--ink);
 }
@@ -1111,12 +1194,12 @@ textarea:focus-visible {
   gap: 8px;
   border: 1px solid var(--line-strong);
   border-radius: 14px;
-  background: #07111b;
+  background: var(--input-background);
 }
 
 .chatForm:focus-within {
-  border-color: rgba(103, 232, 209, 0.58);
-  box-shadow: 0 0 0 3px rgba(103, 232, 209, 0.07);
+  border-color: rgba(var(--accent-rgb), 0.58);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.07);
 }
 
 .chatForm textarea {
@@ -1133,7 +1216,7 @@ textarea:focus-visible {
 }
 
 .chatForm textarea::placeholder {
-  color: #657988;
+  color: var(--placeholder);
 }
 
 .chatForm button {
@@ -1145,7 +1228,7 @@ textarea:focus-visible {
   border: 0;
   border-radius: 10px;
   background: var(--accent);
-  color: #03251f;
+  color: var(--on-accent);
   cursor: pointer;
 }
 
@@ -1156,7 +1239,7 @@ textarea:focus-visible {
 
 .chatDisclaimer {
   margin: 9px 16px 15px;
-  color: #657988;
+  color: var(--placeholder);
   font-size: 0.59rem;
   text-align: center;
 }
@@ -1165,11 +1248,9 @@ textarea:focus-visible {
   width: min(calc(100% - 36px), var(--max-width));
   margin: 150px auto 0;
   padding: clamp(40px, 7vw, 78px);
-  border: 1px solid rgba(103, 232, 209, 0.3);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
   border-radius: 34px;
-  background:
-    radial-gradient(circle at 95% 5%, rgba(103, 232, 209, 0.14), transparent 24rem),
-    linear-gradient(135deg, #102637, #0b1722 68%);
+  background: var(--contact-background);
   box-shadow: var(--shadow);
 }
 
@@ -1223,7 +1304,7 @@ footer > div:last-child a {
 }
 
 footer > div:last-child a:hover {
-  border-color: rgba(103, 232, 209, 0.45);
+  border-color: rgba(var(--accent-rgb), 0.45);
   color: var(--accent);
 }
 
@@ -1335,6 +1416,16 @@ footer > div:last-child a:hover {
 
   .siteHeader nav .navContact {
     padding: 8px 13px;
+  }
+
+  .themeToggle {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .themeToggle span {
+    display: none;
   }
 
   .hero,

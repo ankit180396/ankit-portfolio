@@ -38,7 +38,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" data-theme-preference="system" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f8fa" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#07111b" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              '(function(){try{var s=localStorage.getItem("portfolio-theme-v1");var p=s==="light"||s==="dark"?s:"system";var t=p==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):p;var d=document.documentElement;d.dataset.theme=t;d.dataset.themePreference=p;d.style.colorScheme=t}catch(e){}})()',
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
