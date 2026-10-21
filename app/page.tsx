@@ -85,30 +85,28 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="heroVisual" aria-label="Professional profile summary">
-            <div className="portraitFrame">
-              <div className="portraitBackdrop" />
-              <Image
-                src="/ankit-photo.jpg"
-                alt="Ankit Choudhary"
-                fill
-                priority
-                sizes="(max-width: 600px) 82vw, 390px"
-              />
-              <div className="portraitMonogram" aria-hidden="true">AC</div>
-              <div className="profileBadge profileBadgeTop">
-                <Brain width={18} height={18} />
-                <span><strong>Applied AI</strong>Production workflows</span>
+          <div className="heroVisual">
+            <figure className="portraitCard">
+              <div className="portraitFrame">
+                <Image
+                  src="/ankit-headshot.webp"
+                  alt="Ankit Choudhary"
+                  fill
+                  priority
+                  sizes="(max-width: 600px) 82vw, 400px"
+                />
               </div>
-              <div className="profileBadge profileBadgeBottom">
-                <Code width={18} height={18} />
-                <span><strong>Python + APIs</strong>End-to-end ownership</span>
-              </div>
-            </div>
-            <div className="codeStrip" aria-hidden="true">
-              <span>01</span>
-              <code>problem → architecture → production → impact</code>
-            </div>
+              <figcaption className="portraitCaption">
+                <div className="portraitIdentity">
+                  <span className="portraitStatus"><i /> Currently exploring</span>
+                  <strong>Senior AI &amp; backend engineering roles</strong>
+                </div>
+                <div className="portraitExperience" aria-label="More than seven years building production systems">
+                  <strong>7+</strong>
+                  <span>years shipping<br />production systems</span>
+                </div>
+              </figcaption>
+            </figure>
           </div>
         </div>
 
