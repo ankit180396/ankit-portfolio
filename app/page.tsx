@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "@/components/icons";
 import { ProjectExplorer } from "@/components/project-explorer";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { experience, focusAreas, impactStats, skillGroups } from "@/lib/profile";
 
 const focusIcons = [Brain, Code, Database];
@@ -50,6 +51,7 @@ export default function Home() {
           <a href="#work">Work</a>
           <a href="#experience">Experience</a>
           <a href="#assistant">Ask AI</a>
+          <ThemeToggle />
           <a className="navContact" href="mailto:ankit.er1803@gmail.com">
             Let&apos;s talk
           </a>
@@ -89,7 +91,7 @@ export default function Home() {
             <figure className="portraitCard">
               <div className="portraitFrame">
                 <Image
-                  src="/ankit-headshot.webp"
+                  src="/ankit-headshot-v2.webp"
                   alt="Ankit Choudhary"
                   fill
                   priority
