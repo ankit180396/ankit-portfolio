@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Ankit Choudhary · Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A recruiter-first engineering portfolio built with Next.js, TypeScript, and the Vercel AI SDK. The site combines evidence-based case studies with a bounded AI assistant that answers questions from a curated public knowledge base.
 
-## Available Scripts
+## Why this repository exists
 
-In the project directory, you can run:
+The repository is both the source for the live portfolio and a public engineering sample. It demonstrates:
 
-### `npm start`
+- clear component and content boundaries;
+- server-side AI integration with a deterministic retrieval fallback;
+- deterministic retrieval before generation;
+- input validation, bounded context, output limits, and basic abuse controls;
+- accessible, responsive interaction design;
+- metadata, structured data, robots, and sitemap support;
+- automated tests, type checking, and production builds.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Next.js App Router
+- React and TypeScript
+- Vercel AI SDK and AI Gateway
+- CSS without a runtime styling dependency
+- Node test runner
 
-### `npm test`
+## Run locally
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+npm run dev
+```
 
-### `npm run build`
+The main portfolio and retrieval-only Q&A work without an AI credential. To enable generative answers locally, copy `.env.example` to `.env.local` and provide an AI Gateway credential or use a linked Vercel project's OIDC environment.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cp .env.example .env.local
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Never commit `.env.local` or an API key.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Verification
 
-### `npm run eject`
+```bash
+npm run test
+npm run typecheck
+npm run build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## AI assistant design
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The assistant does not use a database for its small public corpus. Each question is matched against curated knowledge chunks with deterministic keyword scoring. Only the most relevant chunks are passed to the model. If AI Gateway is unavailable, or if a generated response omits its required source label, the API returns an extractive answer directly from those chunks. This keeps the system inexpensive, inspectable, and functional without model access.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The public assistant intentionally excludes phone numbers, compensation, immigration details, home addresses, and confidential client data. It is instructed to say when the evidence is missing rather than improvise.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+See [docs/architecture.md](docs/architecture.md) for the request flow and tradeoffs.
 
-## Learn More
+## Deployment
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The application is designed for Vercel. A Vercel deployment can authenticate to AI Gateway through OIDC, which avoids exposing a provider key in source or client-side JavaScript. Set `AI_GATEWAY_MODEL` to a current model identifier if you want to override the documented default.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## License
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Code is available under the MIT License. Professional background content and personal imagery remain the property of Ankit Choudhary.
