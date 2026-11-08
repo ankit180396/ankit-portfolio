@@ -45,6 +45,19 @@ export const focusAreas = [
 
 export const projects: Project[] = [
   {
+    title: "Healthcare Utilization Data Platform",
+    eyebrow: "Public engineering project · Python / AWS",
+    summary:
+      "Built a multi-tenant event-driven ingestion platform with strict data contracts, S3/SQS/Lambda processing, DynamoDB processing leases, and Redshift staged upserts.",
+    outcome:
+      "Demonstrates 34 automated tests, a working local SQL integration, repeatable deliveries, and an AWS deployment template without any private records.",
+    tags: ["Python", "S3", "SQS", "Lambda", "DynamoDB", "Redshift", "Pytest"],
+    categories: ["Data & ML", "AI & Backend"],
+    href: "https://github.com/ankit180396/ankit-portfolio/tree/main/projects/healthcare-data-ingestion",
+    linkLabel: "View source and architecture",
+    featured: true,
+  },
+  {
     title: "Clinical AI Operations Platform",
     eyebrow: "Production case study · Blue Purpose",
     summary:

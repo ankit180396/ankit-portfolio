@@ -1,0 +1,195 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Event-driven utilization ingestion with S3, SQS, Lambda, DynamoDB and external Redshift Serverless.
+
+Parameters:
+  WorkgroupName:
+    Type: String
+    Description: Existing Redshift Serverless workgroup name (not provisioned by this stack).
+  DatabaseName:
+    Type: String
+    Default: dev
+  SecretArn:
+    Type: String
+    Description: Existing Secrets Manager Redshift database credential ARN.
+  CopyRoleArn:
+    Type: String
+    Description: Existing Redshift IAM role permitted to read this stack's output bucket.
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Architectures: [arm64]
+    MemorySize: 512
+    Timeout: 600
+    Tracing: Active
+
+Resources:
+  RawBucket:
+    Type: AWS::S3::Bucket
+    DependsOn: QueuePolicy
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-raw-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      NotificationConfiguration:
+        QueueConfigurations:
+          - Event: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: incoming/
+                  - Name: suffix
+                    Value: .csv
+            Queue: !GetAtt IngestQueue.Arn
+
+  OutputBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-processed-batches
+            Status: Enabled
+            Prefix: curated/
+            ExpirationInDays: 90
+
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      MessageRetentionPeriod: 1209600
+      SqsManagedSseEnabled: true
+
+  IngestQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 5400
+      SqsManagedSseEnabled: true
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+        maxReceiveCount: 4
+
+  QueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues: [!Ref IngestQueue]
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowSourceBucketNotifications
+            Effect: Allow
+            Principal: {Service: s3.amazonaws.com}
+            Action: sqs:SendMessage
+            Resource: !GetAtt IngestQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Sub 'arn:${AWS::Partition}:s3:::${AWS::StackName}-raw-${AWS::AccountId}'
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+
+  IdempotencyTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expires_at
+        Enabled: true
+      SSESpecification:
+        SSEEnabled: true
+
+  IngestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../src/
+      Handler: health_ingest.handler.lambda_handler
+      Description: Validates tenant-scoped CSV data, stages curated rows and merges into Redshift.
+      Environment:
+        Variables:
+          RAW_BUCKET: !Ref RawBucket
+          OUTPUT_BUCKET: !Ref OutputBucket
+          LEDGER_TABLE: !Ref IdempotencyTable
+          REDSHIFT_WORKGROUP: !Ref WorkgroupName
+          REDSHIFT_DATABASE: !Ref DatabaseName
+          REDSHIFT_SECRET_ARN: !Ref SecretArn
+          REDSHIFT_COPY_ROLE_ARN: !Ref CopyRoleArn
+      Policies:
+        - SQSPollerPolicy:
+            QueueName: !GetAtt IngestQueue.QueueName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref IdempotencyTable
+        - S3ReadPolicy:
+            BucketName: !Ref RawBucket
+        - S3WritePolicy:
+            BucketName: !Ref OutputBucket
+        - Statement:
+            - Effect: Allow
+              Action: s3:GetObjectVersion
+              Resource: !Sub '${RawBucket.Arn}/incoming/*'
+        - Statement:
+            - Effect: Allow
+              Action:
+                - redshift-data:BatchExecuteStatement
+                - redshift-data:DescribeStatement
+              Resource: '*'
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref SecretArn
+      Events:
+        Queue:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt IngestQueue.Arn
+            BatchSize: 1
+            FunctionResponseTypes: [ReportBatchItemFailures]
+
+  DeadLetterAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Messages entered the ingestion dead-letter queue.
+      Namespace: AWS/SQS
+      MetricName: ApproximateNumberOfMessagesVisible
+      Dimensions:
+        - Name: QueueName
+          Value: !GetAtt DeadLetterQueue.QueueName
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+
+Outputs:
+  InputBucket:
+    Value: !Ref RawBucket
+  CuratedBucket:
+    Value: !Ref OutputBucket
+  QueueUrl:
+    Value: !Ref IngestQueue
+  DeadLetterQueueUrl:
+    Value: !Ref DeadLetterQueue
+  IdempotencyTableName:
+    Value: !Ref IdempotencyTable
