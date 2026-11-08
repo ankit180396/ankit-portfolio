@@ -1,0 +1,4 @@
+tenant_id,record_id,service_date,service_code,units,amount_usd,revision
+demo-clinic,EVT-001,2025-05-01,VISIT,1,125.00,1
+demo-clinic,EVT-002,2025-05-02,LAB,2,87.50,1
+demo-clinic,EVT-001,2025-05-01,VISIT,1,127.00,2

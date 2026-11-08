@@ -1,0 +1,16 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+.env.*
+!.env.example
+build/
+dist/
+*.log
+coverage.xml
+.coverage
+*.csv
+!examples/*.csv
